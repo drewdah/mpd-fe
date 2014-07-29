@@ -1,15 +1,33 @@
-var http = require('http');
-var fs = require('fs');
-var index = fs.readFileSync('index.html');
-var mopidy = require('mopidy');
+var express = require('express'),
+    exphbs  = require('express3-handlebars');
+   
+var app = express();
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  res.end(index);
-}).listen(9615);
+// Static assets
+app.use(express.static(__dirname + '/static'));
 
-var mpd = new mopidy({
-   webSocketUrl: "ws://localhost:6680/mopidy/ws/"
+// Index
+app.get('/', function (req, res) {
+    res.render('index', {
+    	title: "Connecting",
+    	css: "index.css",
+    	js: "index.js"
+    });
 });
 
-mpd.on(console.log.bind(console));
+// Now Playing
+app.get('/now-playing', function (req, res) {
+    res.render('now-playing', {
+    	title: "Now Playing",
+    	css: "now-playing.css",
+    	js: "now-playing.js",
+    	artist: "Chevelle",
+    	album: "Wonder What's Next",
+    	song: "The Red",
+    	art: "http://christianmusic.com/chevelle/chevelle-3.jpg"
+    });
+});
+
+app.listen(3000);
