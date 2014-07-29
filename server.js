@@ -26,7 +26,8 @@ app.get('/now-playing', function (req, res) {
     	artist: "Chevelle",
     	album: "Wonder What's Next",
     	song: "The Red",
-    	art: "http://christianmusic.com/chevelle/chevelle-3.jpg"
+    	art: "http://christianmusic.com/chevelle/chevelle-3.jpg",
+    	genre: "Hard Rock"
     });
 });
 
