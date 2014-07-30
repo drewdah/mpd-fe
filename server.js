@@ -22,12 +22,7 @@ app.get('/now-playing', function (req, res) {
     res.render('now-playing', {
     	title: "Now Playing",
     	css: "now-playing.css",
-    	js: "now-playing.js",
-    	artist: "Chevelle",
-    	album: "Wonder What's Next",
-    	song: "The Red",
-    	art: "http://christianmusic.com/chevelle/chevelle-3.jpg",
-    	genre: "Hard Rock"
+    	js: "now-playing.js"
     });
 });
 

@@ -7,9 +7,15 @@
 	{{/if}}
 </head>
 <body>
-	{{{ body }}}
+	<div id="body-content">
+		{{{ body }}}
+	</div>
 
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="/js/mopidy.js"></script>
+	<script type="text/javascript" src="/js/handlebars.js"></script>
+	<script type="text/javascript" src="/js/templates.js"></script>
+
 	{{#if js}}
 		<script type="text/javascript" src="/js/{{js}}"></script>
 	{{/if}}
