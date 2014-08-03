@@ -59,7 +59,7 @@ var Mpdfe = {
 		});
 
 		this.mopidy.on("state:offline", function() {
-			Mpdfe._onDisconnect();;
+			Mpdfe._onDisconnect();
 		});
 
 		this.mopidy.on("event:trackPlaybackStarted", function(data) {
@@ -76,25 +76,20 @@ var Mpdfe = {
 
 		this.mopidy.on("event:playlistsLoaded", function(data) {
 			console.log("playlistloaded");
-			/*showLoading(true);
-			getPlaylists();*/
 		});
 
 		this.mopidy.on("event:volumeChanged", function(data) {
 			console.log("volumechange");
-			/*if (!volumeChanging) {
-			setVolume(data["volume"]);
-			}*/
 		});
 
 		this.mopidy.on("event:playbackStateChanged", function(data) {
 			console.log("playbackstatechanged");
 			switch (data["new_state"]) {
 				case "stopped":
-					//
+					Mpdfe.trackTimer.stop();
 				break;
 				case "playing":
-					Mpdfe._syncTrackTimer();
+					Mpdfe.mopidy.playback.getCurrentTrack().done(Mpdfe._updateTrack);
 				break;
 			}
 		});
@@ -102,11 +97,12 @@ var Mpdfe = {
 		this.mopidy.on("event:tracklistChanged", function(data) {
 			console.log("tracklistchange");
 			//getCurrentPlaylist();
+			Mpdfe.trackTimer.stop();
 		});
 
 		this.mopidy.on("event:seeked", function(data) {
 			console.log("seeked");
-			//setPosition(parseInt(data["time_position"]));
+			Mpdfe._syncTrackTimer();
 		});
 	},
 
@@ -131,27 +127,65 @@ var Mpdfe = {
 	 * @private
 	 */
 	_updateTrack: function(track) {
-		if (track) {
-			Mpdfe.trackTimer.stop(true);
+        if (track) {
 
-			Mpdfe.trackTimer.duration = track.length;
+			var trackType = Mpdfe._getTrackType(track);
 
-			// Update the track info
-			Mpdfe.ui.html("").append(
-				// Drop in new Now Playing template
-				Mpdfe.config.templates["now-playing"]({
-					"artist" : track.artists[0].name,
-					"album" : track.album.name,
-					"song" : track.name,
-					"genre" : track.genre
-				})
-			);
+			switch (trackType) {
+				case "local":
 
-			// Sync the track timer with its playback position
-			Mpdfe._syncTrackTimer();
+					// Stop the track timer
+					Mpdfe.trackTimer.stop(true);
 
-			// Update album art
-			Mpdfe._updateAlbumArt(track.artists[0].name,track.album.name);
+					// Set track length
+					Mpdfe.trackTimer.duration = track.length;
+
+					var artist = (track.artists) ? track.artists[0].name : "",
+						album = (track.album) ? track.album.name : "",
+						song = track.name || "",
+						genre = track.genre || "";
+
+					// Update the track info
+					Mpdfe.ui.html(
+						// Drop in new Now Playing template
+						Mpdfe.config.templates["now-playing"]({
+							"type" : trackType,
+							"artist" : artist,
+							"album" : album,
+							"song" : song,
+							"genre" : genre
+						})
+					);
+
+					// Sync the track timer with its playback position
+					Mpdfe._syncTrackTimer();
+
+					// Update album art
+					if(artist && album){
+						Mpdfe._updateAlbumArt(artist, album);
+					}
+
+				break;
+
+				default:
+
+					// Stop the track timer
+					Mpdfe.trackTimer.stop(true);
+
+					// Update the track info
+					Mpdfe.ui.html(
+						// Drop in new Now Playing template
+						Mpdfe.config.templates["now-playing"]({
+							"type": trackType,
+							"song" : track.name
+						})
+					);
+
+					// Sync the track timer with its playback position
+					Mpdfe._syncTrackTimer();
+
+				break;
+			}
 
 		} else {
 			console.log("No current track");
@@ -179,9 +213,10 @@ var Mpdfe = {
 					a: album
 				}
 			}).success(function(data){
-				Mpdfe.albumCache[hash] = data.album[0].strAlbumThumb + "/preview";
 
+				Mpdfe.albumCache[hash] = data.album[0].strAlbumThumb + "/preview";
 				Mpdfe.ui.find(".art").css('background-image', 'url(' + Mpdfe.albumCache[hash] + ')');
+
 			}).error(function(err){
 				console.log(err)
 			});
@@ -233,6 +268,15 @@ var Mpdfe = {
 		}
 	},
 
+
+	/**
+	 * Returns a type string based on track uri
+	 * @param track
+	 * @private
+	 */
+	_getTrackType: function(track) {
+		return track.uri.substr(0,track.uri.indexOf(":"));
+	},
 
 	/**
 	 * Track Timer

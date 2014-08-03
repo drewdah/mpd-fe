@@ -6,7 +6,14 @@
 	width: 150px;
 	background-size: cover;
 	box-shadow: inset 0px 0px 1px 1px rgba(255,255,255,0.3);
+    background-image: url('/img/art-default.jpg');
 }
+
+.tunein .art { background-image: url('/img/art-tunein.jpg'); }
+.gmusic .art { background-image: url('/img/art-gmusic.jpg'); }
+.spotify .art { background-image: url('/img/art-spotify.jpg'); }
+.soundcloud .art { background-image: url('/img/art-soundcloud.jpg'); }
+
 .meta {
 	position: absolute;
 	top: 15px;
@@ -25,7 +32,6 @@
 	font-size: 14px;
 	line-height: 20px;
 }
-
 
 .active {
 	position: absolute;

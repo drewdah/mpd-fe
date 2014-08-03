@@ -3,7 +3,9 @@ $(function(){
 	// Prepare Mopidy instance
 	var mopidy = new Mopidy({
 		autoConnect: false,
-		webSocketUrl: "ws://" + Mpdfe.config.mopidyServer + "/mopidy/ws/"
+		webSocketUrl: "ws://" + Mpdfe.config.mopidyServer + "/mopidy/ws/",
+		callingConvention: "by-position-or-by-name",
+		console: false
 	});
 
 	// Event for successful connection

@@ -58,27 +58,27 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"art\" style=\"background-image: url('";
-  if (helper = helpers.art) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.art); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "');\"></div>\r\n<div class=\"meta\">\r\n	<div class=\"artist\">";
+  buffer += "<div class=\"now-playing ";
+  if (helper = helpers.type) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.type); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n	<div class=\"art\"></div>\r\n	<div class=\"meta\">\r\n		<div class=\"artist\">";
   if (helper = helpers.artist) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.artist); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n	<div class=\"album\">";
+    + "</div>\r\n		<div class=\"album\">";
   if (helper = helpers.album) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.album); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n	<div class=\"genre\">";
+    + "</div>\r\n		<div class=\"genre\">";
   if (helper = helpers.genre) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.genre); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n</div>\r\n<div class=\"active\">\r\n	<div class=\"song\">";
+    + "</div>\r\n	</div>\r\n	<div class=\"active\">\r\n		<div class=\"song\">";
   if (helper = helpers.song) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.song); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n	<div class=\"progress\"></div>\r\n	<div class=\"time\"></div>\r\n</div>";
+    + "</div>\r\n		<div class=\"progress\"></div>\r\n		<div class=\"time\"></div>\r\n	</div>\r\n</div>";
   return buffer;
   });
 templates['track-position'] = template(function (Handlebars,depth0,helpers,partials,data) {
