@@ -37,7 +37,14 @@
 .active .song {
 	position: absolute;
 	top: 0;
-	font-size: 24px;
+    width: 300px;
+    overflow: hidden;
+
+    font-size: 24px;
+    text-transform: capitalize;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
 }
 .active .progress {
 	top: 30px;

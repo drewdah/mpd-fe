@@ -1,21 +1,19 @@
-function index(){
+$(function(){
 	
 	// Prepare Mopidy instance
-	var mpd = new Mopidy({
+	var mopidy = new Mopidy({
 		autoConnect: false,
-		webSocketUrl: "ws://localhost:6680/mopidy/ws/"
+		webSocketUrl: "ws://" + Mpdfe.config.mopidyServer + "/mopidy/ws/"
 	});
 
 	// Event for successful connection
-	mpd.on("state:online", function () {
+	mopidy.on("state:online", function () {
 	    console.log("connected"); 
 	    window.setTimeout(function(){
 	    	window.location.href = "/now-playing";	
 	    },2000);
-	    
 	});
 
-	mpd.connect();
-}
-index();
+	mopidy.connect();
+});
 

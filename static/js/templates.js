@@ -46,7 +46,7 @@ function program3(depth0,data) {
   if (helper = helpers.body) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.body); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n	</div>\r\n\r\n	<script src=\"//code.jquery.com/jquery-1.11.0.min.js\"></script>\r\n	<script type=\"text/javascript\" src=\"/js/mopidy.js\"></script>\r\n	<script type=\"text/javascript\" src=\"/js/handlebars.js\"></script>\r\n	<script type=\"text/javascript\" src=\"/js/templates.js\"></script>\r\n\r\n	";
+  buffer += "\r\n	</div>\r\n\r\n	<script src=\"//code.jquery.com/jquery-1.11.0.min.js\"></script>\r\n	<script type=\"text/javascript\" src=\"/js/mopidy.js\"></script>\r\n	<script type=\"text/javascript\" src=\"/js/handlebars.js\"></script>\r\n	<script type=\"text/javascript\" src=\"/js/templates.js\"></script>\r\n	<script type=\"text/javascript\" src=\"/js/mpd-fe.js\"></script>\r\n\r\n	";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.js), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</body>\r\n</html>";
@@ -78,7 +78,24 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.song) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.song); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n	<div class=\"progress\"></div>\r\n	<div class=\"time\">2:11/3:54</div>\r\n</div>";
+    + "</div>\r\n	<div class=\"progress\"></div>\r\n	<div class=\"time\"></div>\r\n</div>";
+  return buffer;
+  });
+templates['track-position'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<span class=\"position\">";
+  if (helper = helpers.position) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.position); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span><span class=\"length\">";
+  if (helper = helpers.length) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.length); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>";
   return buffer;
   });
 })();
