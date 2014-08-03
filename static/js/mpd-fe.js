@@ -7,12 +7,12 @@ var Mpdfe = {
 	config : {
 		container: "#body-content",
 		mopidyServer: "192.168.1.118:6680",
-		templates: Handlebars.templates
+		templates: Handlebars.templates,
+		audioDbApiKey: "1"
 	},
 	mopidy: {},
 	ui: {},
-
-	playing: false,
+	albumCache: {},
 
 	/**
 	 * Initialize ui with provided config
@@ -64,20 +64,14 @@ var Mpdfe = {
 
 		this.mopidy.on("event:trackPlaybackStarted", function(data) {
 			console.log("playbackstart");
-			  /*mopidy.playback.getTimePosition().then(processCurrentposition, console.error);
-			 setPlayState(true);
-			 setSongInfo(data.tl_track.track);
-			 initPosTimer(); */
+
 			Mpdfe._updateTrack(data.tl_track.track);
 		});
 
 		this.mopidy.on("event:trackPlaybackPaused", function(data) {
 			console.log("playbackpaused");
-			 /*
-			 //setSongInfo(data.tl_track.track);
-			pausePosTimer();
-			setPlayState(false);
-			*/
+
+			Mpdfe.trackTimer.stop();
 		});
 
 		this.mopidy.on("event:playlistsLoaded", function(data) {
@@ -95,16 +89,14 @@ var Mpdfe = {
 
 		this.mopidy.on("event:playbackStateChanged", function(data) {
 			console.log("playbackstatechanged");
-			/*switch (data["new_state"]) {
-			case "stopped":
-			resetSong();
-			break;
-			case "playing":
-			mopidy.playback.getTimePosition().then(processCurrentposition, console.error);
-			resumePosTimer();
-			setPlayState(true);
-			break;
-			} */
+			switch (data["new_state"]) {
+				case "stopped":
+					//
+				break;
+				case "playing":
+					Mpdfe._syncTrackTimer();
+				break;
+			}
 		});
 
 		this.mopidy.on("event:tracklistChanged", function(data) {
@@ -140,6 +132,11 @@ var Mpdfe = {
 	 */
 	_updateTrack: function(track) {
 		if (track) {
+			Mpdfe.trackTimer.stop(true);
+
+			Mpdfe.trackTimer.duration = track.length;
+
+			// Update the track info
 			Mpdfe.ui.html("").append(
 				// Drop in new Now Playing template
 				Mpdfe.config.templates["now-playing"]({
@@ -149,7 +146,13 @@ var Mpdfe = {
 					"genre" : track.genre
 				})
 			);
-			Mpdfe._updateTrackPosition(0, track.length);
+
+			// Sync the track timer with its playback position
+			Mpdfe._syncTrackTimer();
+
+			// Update album art
+			Mpdfe._updateAlbumArt(track.artists[0].name,track.album.name);
+
 		} else {
 			console.log("No current track");
 		}
@@ -157,19 +160,58 @@ var Mpdfe = {
 
 	/**
 	 *
-	 * @param position
-	 * @param length
+	 * @param artist
+	 * @param album
 	 * @private
 	 */
-	_updateTrackPosition: function(position, length){
+	_updateAlbumArt: function(artist, album){
 
+		var hash = (artist + "-" + album).toLowerCase();
+
+		if(Mpdfe.albumCache[hash]){
+			console.log("album already cached");
+			Mpdfe.ui.find(".art").css('background-image', 'url(' + Mpdfe.albumCache[hash] + ')');
+		} else {
+			$.ajax({
+				url: "/album-art",
+				data: {
+					s: artist,
+					a: album
+				}
+			}).success(function(data){
+				Mpdfe.albumCache[hash] = data.album[0].strAlbumThumb + "/preview";
+
+				Mpdfe.ui.find(".art").css('background-image', 'url(' + Mpdfe.albumCache[hash] + ')');
+			}).error(function(err){
+				console.log(err)
+			});
+		}
+	},
+
+	/**
+	 * Updates the track position based on the provided values
+	 * @param position
+	 * @param duration
+	 * @private
+	 */
+	_updateTrackPosition: function(position, duration){
 		Mpdfe.ui.find(".time").html("").append(
 			Mpdfe.config.templates["track-position"]({
 				"position" : Mpdfe._convertTrackTime(position) + "/",
-				"length" : Mpdfe._convertTrackTime(length)
+				"length" : Mpdfe._convertTrackTime(duration)
 			})
 		);
+	},
 
+	/**
+	 * Sets the track timer to match the playback position
+	 * @private
+	 */
+	_syncTrackTimer: function(){
+		// Update the time;
+		Mpdfe.mopidy.playback.getTimePosition().then(function(pos){
+			Mpdfe.trackTimer.start(pos);
+		}, console.error);
 	},
 
 	/**
@@ -183,6 +225,8 @@ var Mpdfe = {
 			var seconds=Math.floor((time/1000)%60),
 				minutes=Math.floor((time/(1000*60))%60);
 
+			seconds = (seconds < 10 ? '0' : '') + seconds;
+
 			return minutes + ":" + seconds;
 		} else {
 			return "";
@@ -194,18 +238,39 @@ var Mpdfe = {
 	 * Track Timer
 	 */
 	trackTimer: {
-		timer: {},
+		timer: null,
+		duration: 0,
+		position: 0,
 
-		start: function(position, length){
+		start: function(position, duration){
+
+			Mpdfe.trackTimer.stop();
+
+			// Update position
+			Mpdfe.trackTimer.position = position || Mpdfe.trackTimer.position;
+			Mpdfe.trackTimer.duration = duration || Mpdfe.trackTimer.duration;
+
+			this.timer = setInterval(function(){
+				Mpdfe.trackTimer.position += 1000;
+				if(Mpdfe.trackTimer.position <= Mpdfe.trackTimer.duration){
+					Mpdfe._updateTrackPosition(Mpdfe.trackTimer.position, Mpdfe.trackTimer.duration);
+				}else{
+					Mpdfe.trackTimer.stop();
+				}
+			},1000);
 
 		},
 
 		stop: function(reset){
-
+			clearInterval(this.timer);
+			if(reset){
+				Mpdfe.trackTimer.reset()
+			}
 		},
 
 		reset: function(){
-
+			Mpdfe.trackTimer.position = 0;
+			Mpdfe.trackTimer.duration = 0;
 		}
 	}
 };
