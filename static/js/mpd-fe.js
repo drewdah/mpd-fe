@@ -83,13 +83,13 @@ var Mpdfe = {
 		});
 
 		this.mopidy.on("event:playbackStateChanged", function(data) {
-			console.log("playbackstatechanged");
+			console.log("playbackstatechanged", data["new_state"]);
 			switch (data["new_state"]) {
 				case "stopped":
 					Mpdfe.trackTimer.stop();
 				break;
 				case "playing":
-					Mpdfe.mopidy.playback.getCurrentTrack().done(Mpdfe._updateTrack);
+					//
 				break;
 			}
 		});
