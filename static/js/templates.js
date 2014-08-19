@@ -74,28 +74,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.genre) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.genre); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n	</div>\r\n	<div class=\"active\">\r\n		<div class=\"song\">";
+    + "</div>\r\n		<div class=\"state ";
+  if (helper = helpers.state) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.state); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">\r\n			<div class=\"icon\"></div>\r\n		</div>\r\n	</div>\r\n	<div class=\"active\">\r\n		<div class=\"song\">";
   if (helper = helpers.song) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.song); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n		<div class=\"progress\"></div>\r\n		<div class=\"time\"></div>\r\n	</div>\r\n</div>";
-  return buffer;
-  });
-templates['track-position'] = template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
-
-
-  buffer += "<span class=\"position\">";
-  if (helper = helpers.position) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.position); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span><span class=\"length\">";
-  if (helper = helpers.length) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.length); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>";
+    + "</div>\r\n		<div class=\"track-position\">\r\n			<div class=\"progressbar\">\r\n				<div class=\"progress\"></div>\r\n			</div>\r\n			<div class=\"time\">\r\n				<span class=\"position\">0:00 / </span><span class=\"length\">0:00</span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>";
   return buffer;
   });
 })();

@@ -33,6 +33,30 @@
 	line-height: 20px;
 }
 
+.meta .state {
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+}
+
+.meta .state.playing {
+    -webkit-animation: rotate 3s infinite linear;
+
+    border-left: 5px solid rgba(255,255,255,.15);
+    border-bottom: 5px solid rgba(255,255,255,.15);
+    border-right: 5px solid rgba(255,255,255,.15);
+    border-top: 5px solid red;
+}
+
+@-webkit-keyframes rotate {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
 .active {
 	position: absolute;
 	top: 175px;
@@ -52,16 +76,24 @@
     white-space: nowrap;
 
 }
+.active .progressbar {
+    top: 30px;
+    position: absolute;
+    height: 6px;
+    width: 300px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    overflow: hidden;
+}
 .active .progress {
-	top: 30px;
-	position: absolute;
+	position: relative;
 	height: 6px;
-	width: 300px;
-	background-color: red;
-	border-radius: 6px;
+	width: 0px;
+    background: -webkit-linear-gradient(top, #f85032 0%,#f16f5c 50%,#f6290c 51%,#f02f17 71%,#e73827 100%);
+    background-repeat: no-repeat;
 }
 .active .time {
-	top: 40px;
+	top: 45px;
 	position: absolute;
 	font-size: 11px;
 }

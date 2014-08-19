@@ -4,10 +4,19 @@
 		<div class="artist">{{artist}}</div>
 		<div class="album">{{album}}</div>
 		<div class="genre">{{genre}}</div>
+		<div class="state {{state}}">
+			<div class="icon"></div>
+		</div>
 	</div>
 	<div class="active">
 		<div class="song">{{song}}</div>
-		<div class="progress"></div>
-		<div class="time"></div>
+		<div class="track-position">
+			<div class="progressbar">
+				<div class="progress"></div>
+			</div>
+			<div class="time">
+				<span class="position">0:00 / </span><span class="length">0:00</span>
+			</div>
+		</div>
 	</div>
 </div>

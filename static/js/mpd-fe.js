@@ -6,7 +6,7 @@ var Mpdfe = {
 
 	config : {
 		container: "#body-content",
-		mopidyServer: "192.168.1.118:6680",
+		mopidyServer: "192.168.1.108:6680",
 		templates: Handlebars.templates,
 		audioDbApiKey: "1"
 	},
@@ -230,12 +230,14 @@ var Mpdfe = {
 	 * @private
 	 */
 	_updateTrackPosition: function(position, duration){
-		Mpdfe.ui.find(".time").html("").append(
-			Mpdfe.config.templates["track-position"]({
-				"position" : Mpdfe._convertTrackTime(position) + "/",
-				"length" : Mpdfe._convertTrackTime(duration)
-			})
-		);
+		var tpos = Mpdfe.ui.find(".track-position"),
+			pos = tpos.find(".position"),
+			dur = tpos.find(".length"),
+			progress = tpos.find(".progress");
+
+		pos.html(Mpdfe._convertTrackTime(position) + " / ");
+		dur.html(Mpdfe._convertTrackTime(duration));
+		progress.css("width", Math.ceil(position/duration*100) +"%");
 	},
 
 	/**
