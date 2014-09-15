@@ -6,7 +6,7 @@ var Mpdfe = {
 
 	config : {
 		container: "#body-content",
-		mopidyServer: "192.168.1.108:6680",
+		mopidyServer: "192.168.1.115:6680",
 		templates: Handlebars.templates,
 		audioDbApiKey: "1"
 	},
@@ -95,9 +95,9 @@ var Mpdfe = {
 		});
 
 		this.mopidy.on("event:tracklistChanged", function(data) {
-			console.log("tracklistchange");
+			//console.log("tracklistchange");
 			//getCurrentPlaylist();
-			Mpdfe.trackTimer.stop();
+			//Mpdfe.trackTimer.stop();
 		});
 
 		this.mopidy.on("event:seeked", function(data) {
@@ -132,6 +132,8 @@ var Mpdfe = {
 			var trackType = Mpdfe._getTrackType(track);
 
 			switch (trackType) {
+
+				// Local Tracks
 				case "local":
 
 					// Stop the track timer
@@ -167,6 +169,25 @@ var Mpdfe = {
 
 				break;
 
+				// TuneIn Radio
+				case "tunein":
+
+					// Stop the track timer
+					Mpdfe.trackTimer.stop(true);
+
+					// Update the track info
+					Mpdfe.ui.html(
+						// Drop in new Now Playing template
+						Mpdfe.config.templates["now-playing"]({
+							"type": trackType,
+							"artist": "TuneIn Radio",
+							"song" : track.name
+						})
+					);
+
+				break;
+
+				// Default fallback
 				default:
 
 					// Stop the track timer

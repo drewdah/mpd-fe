@@ -10,6 +10,9 @@
 }
 
 .tunein .art { background-image: url('/img/art-tunein.jpg'); }
+.tunein .active .progressbar { display: none; }
+.tunein .active .time { display: none; }
+
 .gmusic .art { background-image: url('/img/art-gmusic.jpg'); }
 .spotify .art { background-image: url('/img/art-spotify.jpg'); }
 .soundcloud .art { background-image: url('/img/art-soundcloud.jpg'); }
@@ -40,21 +43,10 @@
 }
 
 .meta .state.playing {
-    -webkit-animation: rotate 3s infinite linear;
-
     border-left: 5px solid rgba(255,255,255,.15);
     border-bottom: 5px solid rgba(255,255,255,.15);
     border-right: 5px solid rgba(255,255,255,.15);
     border-top: 5px solid red;
-}
-
-@-webkit-keyframes rotate {
-    from{
-        transform: rotate(0deg);
-    }
-    to{
-        transform: rotate(360deg);
-    }
 }
 
 .active {
