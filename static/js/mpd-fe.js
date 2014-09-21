@@ -6,7 +6,7 @@ var Mpdfe = {
 
 	config : {
 		container: "#body-content",
-		mopidyServer: "192.168.1.115:6680",
+		mopidyServer: "localhost:6680",
 		templates: Handlebars.templates,
 		audioDbApiKey: "1"
 	},
@@ -127,7 +127,7 @@ var Mpdfe = {
 	 * @private
 	 */
 	_updateTrack: function(track) {
-        if (track) {
+		if (track) {
 
 			var trackType = Mpdfe._getTrackType(track);
 
@@ -135,6 +135,7 @@ var Mpdfe = {
 
 				// Local Tracks
 				case "local":
+				case "gmusic":
 
 					// Stop the track timer
 					Mpdfe.trackTimer.stop(true);
