@@ -63,45 +63,42 @@ var Mpdfe = {
 		});
 
 		this.mopidy.on("event:trackPlaybackStarted", function(data) {
-			console.log("playbackstart");
-
 			Mpdfe._updateTrack(data.tl_track.track);
 		});
 
 		this.mopidy.on("event:trackPlaybackPaused", function(data) {
-			console.log("playbackpaused");
-
 			Mpdfe.trackTimer.stop();
 		});
 
-		this.mopidy.on("event:playlistsLoaded", function(data) {
-			console.log("playlistloaded");
-		});
-
 		this.mopidy.on("event:volumeChanged", function(data) {
-			console.log("volumechange");
+			Mpdfe._showStatus("Volume: "+data.volume+"%", 1000);
 		});
 
 		this.mopidy.on("event:playbackStateChanged", function(data) {
-			console.log("playbackstatechanged", data["new_state"]);
 			switch (data["new_state"]) {
+				case "paused":
+					Mpdfe.trackTimer.stop();
+					Mpdfe._showStatus("Track: PAUSE", 1000);
+				break;
+
 				case "stopped":
 					Mpdfe.trackTimer.stop();
+					Mpdfe._showStatus("Track: STOP", 1000);
 				break;
+
 				case "playing":
-					//
+					Mpdfe._syncTrackTimer();
+					Mpdfe._showStatus("Track: PLAY", 1000);
 				break;
 			}
 		});
 
 		this.mopidy.on("event:tracklistChanged", function(data) {
-			//console.log("tracklistchange");
-			//getCurrentPlaylist();
-			//Mpdfe.trackTimer.stop();
+			// show status, possibly loading
+			Mpdfe._showStatus("Loading Next Track...");
 		});
 
 		this.mopidy.on("event:seeked", function(data) {
-			console.log("seeked");
 			Mpdfe._syncTrackTimer();
 		});
 	},
@@ -111,7 +108,7 @@ var Mpdfe = {
 	 * @private
 	 */
 	_onConnect: function() {
-		console.log("mpdfe: onConnect");
+		// do something on connect
 	},
 
 	/**
@@ -119,7 +116,7 @@ var Mpdfe = {
 	 * @private
 	 */
 	_onDisconnect: function() {
-		console.log("mpdfe: onDisconnect");
+		// do something on disconnect
 	},
 
 	/**
@@ -127,6 +124,7 @@ var Mpdfe = {
 	 * @private
 	 */
 	_updateTrack: function(track) {
+
 		if (track) {
 
 			var trackType = Mpdfe._getTrackType(track);
@@ -210,7 +208,19 @@ var Mpdfe = {
 			}
 
 		} else {
-			console.log("No current track");
+
+			// Update the track info
+			Mpdfe.ui.html(
+				// Drop in new Now Playing template
+				Mpdfe.config.templates["now-playing"]({
+					"artist": "No Artist",
+					"album": "No Album",
+					"song": "No Title",
+					"status": "Ready to Play!",
+					"status-class": "ready"
+				})
+			);
+
 		}
 	},
 
@@ -237,7 +247,7 @@ var Mpdfe = {
 			}).success(function(data){
 
 				Mpdfe.albumCache[hash] = data.album[0].strAlbumThumb + "/preview";
-				Mpdfe.ui.find(".art").css('background-image', 'url(' + Mpdfe.albumCache[hash] + ')');
+				Mpdfe.ui.find(".art").removeClass("cover").addClass("cover").css('background-image', 'url(' + Mpdfe.albumCache[hash] + ')');
 
 			}).error(function(err){
 				console.log(err)
@@ -300,6 +310,25 @@ var Mpdfe = {
 	 */
 	_getTrackType: function(track) {
 		return track.uri.substr(0,track.uri.indexOf(":"));
+	},
+
+
+	/**
+	 * Shows a status message with optional timeout before fading out
+	 * @param status
+	 * @param timeout
+	 * @private
+	 */
+	_showStatus: function(status, timeout){
+		var $status = Mpdfe.ui.find(".status");
+
+		$status.html(status).removeClass("fade").addClass("show");
+
+		if(timeout){
+			setTimeout(function(){
+				$status.addClass("fade").removeClass("show");
+			}, timeout);
+		}
 	},
 
 	/**

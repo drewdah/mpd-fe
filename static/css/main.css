@@ -1,12 +1,12 @@
 body {
 	background-color: #000;
 	color: #fff;
-	font-family: Arial, Sans Serif;
+	font-family: Roboto;
+    margin: 0;
+    padding: 0;
 }
 
-.icon-loading {
-	display: inline-block;
-	width: 151px;
-	height: 51px;
-	background-image: url("/img/loading.gif");
+#body-content {
+    width: 320px;
+    height: 240px;
 }

@@ -82,7 +82,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.song) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.song); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n		<div class=\"track-position\">\r\n			<div class=\"progressbar\">\r\n				<div class=\"progress\"></div>\r\n			</div>\r\n			<div class=\"time\">\r\n				<span class=\"position\">0:00 / </span><span class=\"length\">0:00</span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>";
+    + "</div>\r\n		<div class=\"track-position\">\r\n			<div class=\"progressbar\">\r\n				<div class=\"progress\"></div>\r\n			</div>\r\n			<div class=\"time\">\r\n				<span class=\"position\">0:00 / </span><span class=\"length\">0:00</span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n<div class=\"status ";
+  if (helper = helpers['status-class']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['status-class']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.status) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.status); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</div>";
   return buffer;
   });
 })();

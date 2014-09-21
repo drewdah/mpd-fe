@@ -1,3 +1,7 @@
+.now-playing {
+    color: rgba(255,255,255,0.5);
+}
+
 .art {
 	position: absolute;
 	top: 15px;
@@ -5,17 +9,11 @@
 	height: 150px;
 	width: 150px;
 	background-size: cover;
-	box-shadow: inset 0px 0px 1px 1px rgba(255,255,255,0.3);
     background-image: url('/img/art-default.jpg');
 }
-
-.tunein .art { background-image: url('/img/art-tunein.jpg'); }
-.tunein .active .progressbar { display: none; }
-.tunein .active .time { display: none; }
-
-.gmusic .art { background-image: url('/img/art-gmusic.jpg'); }
-.spotify .art { background-image: url('/img/art-spotify.jpg'); }
-.soundcloud .art { background-image: url('/img/art-soundcloud.jpg'); }
+.art.cover {
+    box-shadow: inset 0px 0px 1px 1px rgba(255,255,255,0.3);
+}
 
 .meta {
 	position: absolute;
@@ -26,6 +24,9 @@
 .meta .artist {
 	font-size: 26px;
 	line-height: 35px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .meta .album {
 	font-size: 14px;
@@ -81,7 +82,7 @@
 	position: relative;
 	height: 6px;
 	width: 0px;
-    background: -webkit-linear-gradient(top, #f85032 0%,#f16f5c 50%,#f6290c 51%,#f02f17 71%,#e73827 100%);
+    background: -webkit-linear-gradient(top, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
     background-repeat: no-repeat;
 }
 .active .time {
@@ -89,3 +90,53 @@
 	position: absolute;
 	font-size: 11px;
 }
+
+.status {
+    display: block;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    box-shadow: inset 0px 0px 1px 1px rgba(255,255,255,0.3);
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.status.ready {
+    opacity: 1;
+    font-size: 24px;
+    min-width: 180px;
+}
+
+.status.show {
+    opacity: 1;
+}
+
+.status.fade {
+    -webkit-transition: opacity 1s;
+}
+
+/* Local */
+.now-playing.local { color: fff; }
+
+/* TuneIn Radio */
+.now-playing.tunein { color: fff; }
+.now-playing.tunein .art { background-image: url('/img/art-tunein.jpg'); }
+.now-playing.tunein .active .progressbar { display: none; }
+.now-playing.tunein .active .time { display: none; }
+
+/* Google Music */
+.now-playing.gmusic { color: fff; }
+.now-playing.gmusic .art { background-image: url('/img/art-gmusic.jpg'); }
+
+/* Spotify */
+.now-playing.spotify { color: fff; }
+.now-playing.spotify .art { background-image: url('/img/art-spotify.jpg'); }
+
+/* Soundcloud */
+.now-playing.soundcloud { color: fff; }
+.now-playing.soundcloud .art { background-image: url('/img/art-soundcloud.jpg'); }
