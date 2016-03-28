@@ -8,6 +8,9 @@
 	"type": "git",
 		"url": "https://github.com/drewdah/mpd-fe"
 	},
+	"scripts": {
+		"start" : "node server.js"		
+	}
 	"dependencies": {
 		"mopidy" : "*",
 		"express" : "*",
