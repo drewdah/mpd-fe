@@ -3,7 +3,6 @@ var express = require('express'),
 	request = require("request"),
 	url = require('url')
 
-   
 var app = express();
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -38,4 +37,7 @@ app.get('/album-art', function (req, res) {
 	req.pipe(request(albumUrl)).pipe(res);
 });
 
-app.listen(3000);
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+
+app.listen(server_port, server_ip_address);
